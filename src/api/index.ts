@@ -1,3 +1,4 @@
+import queues from '../queues';
 import * as express from 'express';
 const router = express.Router();
 
@@ -6,7 +7,13 @@ const getPing = async (_req, res) => {
   return res.send(body).status(200);
 };
 
- 
+const postLog = async (req, res) => {
+  const body = { message: req.body.message };
+  await queues.log.add(body);
+  return res.send(body);
+};
+
+router.post('/log', postLog);
 router.get('/', getPing);
 
 export default router;
