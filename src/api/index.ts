@@ -1,5 +1,8 @@
 import queues from '../queues';
 import * as express from 'express';
+import RedisCli from '../redis';
+
+const redis = RedisCli.getInstance();
 const router = express.Router();
 
 const getPing = async (_req, res) => {
@@ -29,10 +32,19 @@ const postCandidate = async (req, res) => {
   return res.send(body).status(200);
 };
 
+const postVote = async (req, res) => {
+  const body = req.body;
+  await queues.vote.add({ partyNumber: body.partyNumber });
+  return res.send(body);
+};
+
+
+
 router.get('/', getPing);
 router.post('/log', postLog);
 router.post('/email', postEmail);
 router.post('/candidate', postCandidate);
+router.post('/vote', postVote);
 
 
 export default router;
