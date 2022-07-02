@@ -13,7 +13,14 @@ const postLog = async (req, res) => {
   return res.send(body);
 };
 
+const postEmail = async (req, res) => {
+  const body = { message: req.body.message };
+  await queues.email.add(body);
+  return res.send(body);
+};
+
 router.post('/log', postLog);
+router.post('/email', postEmail);
 router.get('/', getPing);
 
 export default router;
